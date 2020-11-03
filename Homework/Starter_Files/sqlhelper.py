@@ -14,6 +14,8 @@ conn
 
 """
 import pandas as pd
+import calendar
+from sqlalchemy import create_engine
 
 class Helper:
     def __init__(self):
@@ -78,11 +80,11 @@ class Helper:
              
         )
         
-    def conn(self):
-        print("engine = create_engine(\"postgresql://postgres:postgres@localhost:5432/estate_db\")")
-    def fireup(self,db_name):
-        from sqlalchemy import create_engine
-        engine = create_engine(f"postgresql://postgres:postgres@localhost:5432/{db_name}")
-        query = f"SELECT * FROM {db_name}"
-        df = pd.read_sql(query, engine)
+
+    def connect(self,db_name, pw, port = 5432):
+        engine = create_engine(f"postgresql://postgres:{pw}@localhost:{port}/{db_name}")       
+        return engine
+    
+    def to_monthname(self,df,fieldname):
+        df[fieldname] = df[fieldname].apply(lambda x: calendar.month_abbr[x])
         return df

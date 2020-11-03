@@ -5,16 +5,16 @@
 -- Modify this code to update the DB schema diagram.
 -- To reset the sample schema, replace everything with
 -- two dots ('..' - without quotes).
-DROP TABLE IF EXISTS Customers CASCADE;
-DROP TABLE IF EXISTS Merchants CASCADE;
-DROP TABLE IF EXISTS Merchant_Categories CASCADE;
-DROP TABLE IF EXISTS Cards CASCADE;
-DROP TABLE IF EXISTS Transactions CASCADE;
+DROP TABLE IF EXISTS card_holder CASCADE;
+DROP TABLE IF EXISTS merchant CASCADE;
+DROP TABLE IF EXISTS merchant_category CASCADE;
+DROP TABLE IF EXISTS credit_card CASCADE;
+DROP TABLE IF EXISTS "transaction" CASCADE;
 
 
 
 
-CREATE TABLE "Customers" (
+CREATE TABLE "card_holder" (
     "customer_id" SERIAL   NOT NULL,
     "full_name" VARCHAR(50)   NOT NULL,
     CONSTRAINT "pk_Customers" PRIMARY KEY (
@@ -22,7 +22,7 @@ CREATE TABLE "Customers" (
      )
 );
 
-CREATE TABLE "Cards" (
+CREATE TABLE "credit_card" (
     "card_id" VARCHAR(20)   NOT NULL,
     "customer_id" int   NOT NULL,
     CONSTRAINT "pk_Cards" PRIMARY KEY (
@@ -30,43 +30,43 @@ CREATE TABLE "Cards" (
      )
 );
 
-CREATE TABLE "Merchant_Categories" (
+CREATE TABLE "merchant_category" (
     "category_id" SERIAL   NOT NULL,
     "category_name" VARCHAR(20)   NOT NULL,
-    CONSTRAINT "pk_Merchant_Categories" PRIMARY KEY (
+    CONSTRAINT "pk_merchant_category" PRIMARY KEY (
         "category_id"
      )
 );
 
-CREATE TABLE "Merchants" (
+CREATE TABLE "merchant" (
     "merchant_id" SERIAL   NOT NULL,
     "merchant_name" VARCHAR(50)   NOT NULL,
     "category_id" INT NOT NULL,
-    CONSTRAINT "pk_Merchants" PRIMARY KEY (
+    CONSTRAINT "pk_merchant" PRIMARY KEY (
         "merchant_id"
      )
 );
 
-CREATE TABLE "Transactions" (
+CREATE TABLE "transaction" (
     "transaction_id" INT   NOT NULL,
     "transaction_date" TIMESTAMP   NOT NULL,
     "amount" FLOAT   NOT NULL,
     "card_id" VARCHAR(20)   NOT NULL,
     "merchant_id" INT   NOT NULL,
-    CONSTRAINT "pk_Transactions" PRIMARY KEY (
+    CONSTRAINT "pk_transaction" PRIMARY KEY (
         "transaction_id"
      )
 );
 
-ALTER TABLE "Cards" ADD CONSTRAINT "fk_Cards_customer_id" FOREIGN KEY("customer_id")
-REFERENCES "Customers" ("customer_id");
+ALTER TABLE "credit_card" ADD CONSTRAINT "fk_credit_card_customer_id" FOREIGN KEY("customer_id")
+REFERENCES "card_holder" ("customer_id");
 
-ALTER TABLE "Merchants" ADD CONSTRAINT "fk_Merchants_category_id" FOREIGN KEY("category_id")
-REFERENCES "Merchant_Categories" ("category_id");
+ALTER TABLE "merchant" ADD CONSTRAINT "fk_merchant_category_id" FOREIGN KEY("category_id")
+REFERENCES "merchant_category" ("category_id");
 
-ALTER TABLE "Transactions" ADD CONSTRAINT "fk_Transactions_card_id" FOREIGN KEY("card_id")
-REFERENCES "Cards" ("card_id");
+ALTER TABLE "transaction" ADD CONSTRAINT "fk_transaction_card_id" FOREIGN KEY("card_id")
+REFERENCES "credit_card" ("card_id");
 
-ALTER TABLE "Transactions" ADD CONSTRAINT "fk_Transactions_merchant_id" FOREIGN KEY("merchant_id")
-REFERENCES "Merchants" ("merchant_id");
+ALTER TABLE "transaction" ADD CONSTRAINT "fk_transaction_merchant_id" FOREIGN KEY("merchant_id")
+REFERENCES "merchant" ("merchant_id");
 
